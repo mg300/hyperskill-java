@@ -23,6 +23,8 @@ public class BullsCows {
         setSecret(length);
         output.accept("The secret is prepared: "+generateStars(length)+" (0-9)");
         output.accept("Okay, let's start a game!");
+        play();
+        gameEnd();
 
     }
     private void setSecret(int length){
@@ -41,29 +43,62 @@ public class BullsCows {
                 }
             }
         }
+        System.out.println(Arrays.toString(code));
+
         secret = code;
     }
 
     private void play(){
-    }
-
-    private int countCows(){
-        return 0;
-    }
-    private int countBulls(){
-
-        return 0;
-    }
-    private void displayResults(){
-
-    }
-    private String generateStars(int length){
-
-        StringBuilder starsString = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            starsString.append("*");
+        int i = 1;
+        int[] guessArr;
+        while(true){
+            output.accept("Turn" + i);
+            String guessStr = scanner.nextLine();
+            guessArr = String.valueOf(guessStr)
+                    .chars()
+                    .map(Character::getNumericValue)
+                    .toArray();
+            if(guessArr.length != secret.length)
+                continue;
+            i++;
+            int cows = countCows(guessArr);
+            int bulls = countBulls(guessArr);
+            output.accept((cows>0 ? "Cows: "+cows+" " : "") + (bulls>0 ? "Bulls: "+bulls : ""));
+            if(bulls==secret.length) break;
         }
 
-        return starsString.toString();
+
+    }
+
+    private int countCows(int[] guess){
+        int cows = 0;
+        for(int i=0; i<secret.length; i++){
+            for(int j=0; j< secret.length; j++){
+                if(secret[i] != guess[i] && secret[i] == guess[j]){
+                    cows++;
+                }
+            }
+        }
+        return cows;
+    }
+    private int countBulls(int[] guess){
+        int bulls = 0;
+        for(int i=0; i<secret.length; i++){
+            if(secret[i] == guess[i]){
+                bulls++;
+            }
+        }
+        return bulls;
+    }
+    private void gameEnd(){
+        StringBuilder out= new StringBuilder();
+        for(int i : secret) {
+            out.append(i);
+        }
+
+        output.accept("Congratulations! You guessed the secret code!\nThe code is: "+out);
+    }
+    private String generateStars(int length){
+        return "*".repeat(length);
     }
 }
