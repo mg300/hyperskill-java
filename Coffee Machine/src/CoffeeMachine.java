@@ -1,3 +1,4 @@
+import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
@@ -14,12 +15,14 @@ public class CoffeeMachine implements Machine{
     }
     public void powerOn(){
         storage = new Storage();
-        output.accept(storage.getAmount());
+        remaining();
     }
     public void run() {
         while (action()) {}
     }
-
+    public void remaining(){
+        output.accept(storage.getAmount());
+    }
     public void fill(){
         output.accept("Write how many ml of water you want to add: ");
         int water = scanner.nextInt();
@@ -30,7 +33,6 @@ public class CoffeeMachine implements Machine{
         output.accept("Write how many disposable cups you want to add: ");
         int cups = scanner.nextInt();
         storage.addAmount(water,milk,coffee,cups);
-        output.accept(storage.getAmount());
 
 
 
@@ -38,7 +40,6 @@ public class CoffeeMachine implements Machine{
     public void take(){
         output.accept("I gave you $"+storage.money);
         storage.takeMoney();
-        output.accept(storage.getAmount());
     }
     public void buy(){
         output.accept("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino: ");
@@ -48,10 +49,13 @@ public class CoffeeMachine implements Machine{
             case 3 -> "CAPPUCCINO";
             default -> "";
         };
-        boolean cafffeMade = storage.takeIngr(Product.valueOf(caffee));
-        if(cafffeMade){
-            output.accept(storage.getAmount());
-        }else output.accept("Not enough ingredients");
+        Map<String, Integer> notEnoughIngredients = storage.takeIngredient(Product.valueOf(caffee));
+        if(notEnoughIngredients.isEmpty()){
+
+            output.accept("I have enough resources, making you a coffee!");
+        }else {
+            notEnoughIngredients.forEach((key, value) -> System.out.println("Sorry, not enough " + key ));
+        }
 
     }
     public boolean action() {
@@ -65,6 +69,9 @@ public class CoffeeMachine implements Machine{
                 break;
             case "take":
                 take();
+                break;
+            case "remaining":
+                remaining();
                 break;
             case "exit":
                 return false;

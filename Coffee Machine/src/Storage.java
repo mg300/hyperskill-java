@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.Map;
 
 public class Storage {
@@ -23,6 +24,7 @@ public class Storage {
     }
 
     public void addAmount(int water, int milk, int coffeeBeans, int cups) {
+        if(water<0 || milk<0 || coffeeBeans<0 || cups<0) return;
         this.water += water;
         this.milk += milk;
         this.coffeeBeans += coffeeBeans;
@@ -39,22 +41,30 @@ public class Storage {
                 +cups+" disposable cups\n" +
                 "$"+money+" of money\n");
     }
-    public boolean takeIngr(Product product){
+    public Map<String,Integer> takeIngredient(Product product){
         Map<String, Integer> productMap = product.getProperties();
+        Map<String, Integer> notEnoughMap = new HashMap<>();
         if(productMap.get("WATER")>water){
-            return false;
-        } else if (productMap.get("MILK")>milk){
-            return false;
-        }else if (productMap.get("BEANS")>coffeeBeans){
-            return false;
-        }else if (productMap.get("CUPS")>cups){
-            return false;
+            notEnoughMap.put("WATER", productMap.get("WATER"));
+
         }
-        water-=productMap.get("WATER");
-        milk-=productMap.get("MILK");
-        coffeeBeans-=productMap.get("BEANS");
-        cups-=productMap.get("CUPS");
-        money+=productMap.get("COST");
-        return true;
+        if (productMap.get("MILK")>milk){
+            notEnoughMap.put("MILK", productMap.get("MILK"));
+        }
+        if (productMap.get("BEANS")>coffeeBeans){
+            notEnoughMap.put("BEANS", productMap.get("BEANS"));
+
+
+        }if (productMap.get("CUPS")>cups){
+            notEnoughMap.put("CUPS", productMap.get("CUPS"));
+        }
+        if(notEnoughMap.isEmpty()){
+            water-=productMap.get("WATER");
+            milk-=productMap.get("MILK");
+            coffeeBeans-=productMap.get("BEANS");
+            cups-=productMap.get("CUPS");
+            money+=productMap.get("COST");
+        }
+        return notEnoughMap;
     }
 }

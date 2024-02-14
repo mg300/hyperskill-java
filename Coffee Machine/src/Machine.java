@@ -4,4 +4,5 @@ public interface Machine {
     void take();
     void run();
     boolean action();
+    void remaining();
 }
