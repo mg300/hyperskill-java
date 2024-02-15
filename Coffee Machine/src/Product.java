@@ -5,7 +5,6 @@ public enum Product {
             "WATER", 250,
             "MILK", 0,
             "BEANS", 16,
-            "CUPS", 1,
             "COST", 4
     )
     ),
@@ -13,7 +12,6 @@ public enum Product {
             "WATER", 350,
             "MILK", 75,
             "BEANS", 20,
-            "CUPS", 1,
             "COST", 5
     )
     ),
@@ -21,7 +19,6 @@ public enum Product {
             "WATER", 250,
             "MILK", 100,
             "BEANS", 12,
-            "CUPS", 1,
             "COST", 6
     )
     );
