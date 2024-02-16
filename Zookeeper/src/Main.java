@@ -2,143 +2,26 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("I love animals!\n" +
-                "Let's check on the animals...\n" +
-                "The deer looks fine.\n" +
-                "The bat looks happy.\n" +
-                "The lion looks healthy.");
-        String rabbit = """
-                Switching on the camera in the rabbit habitat...
-                         ,
-                        /|      __
-                       / |   ,-~ /
-                      Y :|  //  /
-                      | jj /( .^
-                      >-"~"-v"
-                     /       Y
-                    jo  o    |
-                   ( ~T~     j
-                    >._-' _./
-                   /   "~"  |
-                  Y     _,  |
-                 /| ;-"~ _  l
-                / l/ ,-"~    \\
-                \\//\\/      .- \\
-                 Y        /    Y
-                 l       I     !
-                 ]\\      _\\    /"\\
-                (" ~----( ~   Y.  )
-                It looks like we will soon have more rabbits!
-                """;
-        String bat = """
-            Switching on the camera in the bat habitat...
-            _________________               _________________
-             ~-.              \\  |\\___/|  /              .-~
-                 ~-.           \\ / o o \\ /           .-~
-                    >           \\\\  W  //           <
-                   /             /~---~\\             \\
-                  /_            |       |            _\\
-                     ~-.        |       |        .-~
-                        ;        \\     /        i
-                       /___      /\\   /\\      ___\\
-                            ~-. /  \\_/  \\ .-~
-                               V         V
-             This bat looks like it's doing fine.
-                               """;
-        String camel = """
-            Switching on the camera in the camel habitat...
-             ___.-''''-.
-            /___  @    |
-            ',,,,.     |         _.'''''''._
-                 '     |        /           \\
-                 |     \\    _.-'             \\
-                 |      '.-'                  '-.
-                 |                               ',
-                 |                                '',
-                  ',,-,                           ':;
-                       ',,| ;,,                 ,' ;;
-                          ! ; !'',,,',',,,,'!  ;   ;:
-                         : ;  ! !       ! ! ;  ;   :;
-                         ; ;   ! !      ! !  ; ;   ;,
-                        ; ;    ! !     ! !   ; ;
-                        ; ;    ! !    ! !     ; ;
-                       ;,,      !,!   !,!     ;,;
-                       /_I      L_I   L_I     /_I
-            Look at that! Our little camel is sunbathing!""";
-        String lion = """
-            Switching on the camera in the lion habitat...
-                                                           ,w.
-                                                         ,YWMMw  ,M  ,
-                                    _.---.._   __..---._.'MMMMMw,wMWmW,
-                               _.-""        '''           YP"WMMMMMMMMMb,
-                            .-' __.'                   .'     MMMMW^WMMMM;
-                _,        .'.-'"; `,       /`     .--""      :MMM[==MWMW^;
-             ,mM^"     ,-'.'   /   ;      ;      /   ,       MMMMb_wMW"  @\\
-            ,MM:.    .'.-'   .'     ;     `\\    ;     `,     MMMMMMMW `"=./`-,
-            WMMm__,-'.'     /      _.\\      F'''-+,,   ;_,_.dMMMMMMMM[,_ / `=_}
-            "^MP__.-'    ,-' _.--""   `-,   ;       \\  ; ;MMMMMMMMMMW^``; __|
-                       /   .'            ; ;         )  )`{  \\ `"^W^`,   \\  :
-                      /  .'             /  (       .'  /     Ww._     `.  `"
-                     /  Y,              `,  `-,=,_{   ;      MMMP`""-,  `-._.-,
-                    (--, )                `,_ / `) \\/"")      ^"      `-, -;"\\:
-            The lion is roaring!""";
-        String deer = """
-            Switching on the camera in the deer habitat...
-               /|       |\\
-            `__\\       //__'
-               ||      ||
-             \\__`\\     |'__/
-               `_\\   //_'
-               _.,:---;,._
-               \\_:     :_/
-                 |@. .@|
-                 |     |
-                 ,\\.-./ \\
-                 ;;`-'   `---__________-----.-.
-                 ;;;                         \\_\\
-                 ';;;                         |
-                  ;    |                      ;
-                   \\   \\     \\        |      /
-                    \\_, \\    /        \\     |\\
-                      |';|  |,,,,,,,,/ \\    \\ \\_
-                      |  |  |           \\   /   |
-                      \\  \\  |           |  / \\  |
-                       | || |           | |   | |
-                       | || |           | |   | |
-                       | || |           | |   | |
-                       |_||_|           |_|   |_|
-                      /_//_/           /_/   /_/
-            Our 'Bambi' looks hungry. Let's go to feed it!""";
-        String goose = """
-            Switching on the camera in the goose habitat...
-            
-                                                _
-                                            ,-"" "".
-                                          ,'  ____  `.
-                                        ,'  ,'    `.  `._
-               (`.         _..--.._   ,'  ,'        \\    \\
-              (`-.\\    .-""        ""'   /          (  d _b
-             (`._  `-"" ,._             (            `-(   \\
-             <_  `     (  <`<            \\              `-._\\
-              <`-       (__< <           :
-               (__        (_<_<          ;
-                `------------------------------------------
-            The goose is staring intently at you... Maybe it's time to change the channel?""";
-
-        String endMessage = "You've reached the end of the program. To check another habitat, please restart the watcher.";
+        String endMessage = "See you later";
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Please enter the number of the habitat you would like to view: ");
-        int animalNumber = scanner.nextInt();
-        String choosenAnimal = switch(animalNumber){
-            case 1 -> rabbit;
-            case 2 -> bat;
-            case 3 -> lion;
-            case 4 -> camel;
-            case 5 -> deer;
-            case 6 -> goose;
-            default -> "something went wrong";
-        };
-        System.out.println(choosenAnimal);
+        String insertedString="EXIT";
+        while(true){
+            System.out.println("Please enter the name of the habitat you would like to view: ");
+            for (Habitat value : Habitat.values()) {
+                System.out.print( value +", ");
+            }
+            System.out.print(" EXIT:\n");
+
+            try{
+                insertedString = scanner.next().toUpperCase();
+                if(insertedString.equals("EXIT")) break;
+                Habitat habitat = Habitat.valueOf(insertedString);
+                System.out.println(habitat.getHabitatDescription());
+            }catch (IllegalArgumentException e){
+                System.out.println("Wrong name");
+            }
+
+        }
         System.out.println(endMessage);
         }
 }
