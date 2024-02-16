@@ -8,97 +8,51 @@ public class BullsCows {
 
     private final Consumer<String> output;
 
-    private int[] secret;
+    private int secretLength;
+
+    private BullsCowsLogic gameLogic;
 
 
     public BullsCows(Scanner scanner, Consumer<String> output) {
         this.scanner = scanner;
         this.output = output;
+        gameLogic = new BullsCowsLogic();
         startGame();
     }
 
     public void startGame(){
         output.accept("Input the length of the secret code(1-10): ");
-        int length = scanner.nextInt();
-        setSecret(length);
-        output.accept("The secret is prepared: "+generateStars(length)+" (0-9)");
+        secretLength = scanner.nextInt();
+        String secret = gameLogic.generateSecret(secretLength);
+        output.accept("The secret is prepared: "+secret+" (0-9)");
         output.accept("Okay, let's start a game!");
         play();
-        gameEnd();
 
     }
-    private void setSecret(int length){
 
-        if(length>10){
-            throw new IllegalArgumentException("wrong length");
-        }
-        int[] code = new int[length];
-        Arrays.fill(code,-1);
-        for(int i=0; i<length; i++){
-            while (true) {
-                final int randomDec = (int) (Math.random() * 10);
-                if (Arrays.stream(code).noneMatch(c -> c == randomDec)) {
-                    code[i] = randomDec;
-                    break;
-                }
-            }
-        }
-        System.out.println(Arrays.toString(code));
-
-        secret = code;
-    }
-
-    private void play(){
-        int i = 1;
-        int[] guessArr;
+    public void play(){
+        int turn = 1;
         while(true){
-            output.accept("Turn" + i);
-            String guessStr = scanner.nextLine();
-            guessArr = String.valueOf(guessStr)
+            output.accept("Turn" + turn+": ");
+            turn++;
+            String guessNumbersString = scanner.next();
+            int[] guessNumbersArr = String.valueOf(guessNumbersString)
                     .chars()
                     .map(Character::getNumericValue)
                     .toArray();
-            if(guessArr.length != secret.length)
+            if(guessNumbersArr.length != secretLength) {
+                output.accept("Secret and guess must have the same length");
                 continue;
-            i++;
-            int cows = countCows(guessArr);
-            int bulls = countBulls(guessArr);
-            output.accept((cows>0 ? "Cows: "+cows+" " : "") + (bulls>0 ? "Bulls: "+bulls : ""));
-            if(bulls==secret.length) break;
-        }
-
-
-    }
-
-    private int countCows(int[] guess){
-        int cows = 0;
-        for(int i=0; i<secret.length; i++){
-            for(int j=0; j< secret.length; j++){
-                if(secret[i] != guess[i] && secret[i] == guess[j]){
-                    cows++;
-                }
             }
-        }
-        return cows;
-    }
-    private int countBulls(int[] guess){
-        int bulls = 0;
-        for(int i=0; i<secret.length; i++){
-            if(secret[i] == guess[i]){
-                bulls++;
+            int cows = gameLogic.countCows(guessNumbersArr);
+            int bulls = gameLogic.countBulls(guessNumbersArr);
+            output.accept(("Cows: "+cows+" ") + ("Bulls: "+bulls));
+            if(bulls==secretLength) {
+                output.accept("Congratulations! You guessed the secret code!\nThe code is: "+ Arrays.toString(guessNumbersArr));
+                break;
             }
-        }
-        return bulls;
-    }
-    private void gameEnd(){
-        StringBuilder out= new StringBuilder();
-        for(int i : secret) {
-            out.append(i);
-        }
 
-        output.accept("Congratulations! You guessed the secret code!\nThe code is: "+out);
+        }
     }
-    private String generateStars(int length){
-        return "*".repeat(length);
-    }
+
 }
