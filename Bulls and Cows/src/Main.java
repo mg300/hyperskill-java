@@ -6,6 +6,5 @@ public class Main {
         Consumer<String> output = System.out::println;
         Scanner scanner = new Scanner(System.in);
         BullsCows game = new BullsCows(scanner, output);
-
     }
 }
