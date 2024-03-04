@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -12,7 +11,13 @@ public class Reader {
           while(true){
               String name= scanner.nextLine();
               name=name.substring(0, 1).toUpperCase() + name.substring(1);
-              playerIndex= Arrays.binarySearch(players, name);
+              playerIndex = -1;
+              for (int i = 0; i < players.length; i++) {
+                  if (players[i].equals(name)) {
+                      playerIndex = i;
+                      break;
+                  }
+              }
               if(playerIndex<0) {
                   System.out.println("Choose between 'John' and 'Jack'");
                   continue;
