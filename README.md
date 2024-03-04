@@ -4,4 +4,7 @@ This repository contains my learning projects
 ### List of projects
 
 - Chat - simple chat bot
-# xxx
+- Bulls and Cows - simple game
+- Coffee Machiune - virtual barista
+- Last Pencil - sime game
+- Zookeeper - keep eye on animal
