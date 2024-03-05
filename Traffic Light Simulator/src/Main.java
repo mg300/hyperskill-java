@@ -1,5 +1,15 @@
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+
+        System.out.println("Welcome to the traffic management system!");
+        System.out.println("Menu");
+        System.out.println("1. Add");
+        System.out.println("2. Delete");
+        System.out.println("3. System");
+        System.out.println("0. Quit");
+        Scanner scanner = new Scanner(System.in);
+        scanner.nextLine();
     }
 }
