@@ -1,46 +1,43 @@
-import java.util.InputMismatchException;
-import java.util.Scanner;
-
 public class Main {
     public static void main(String[] args) {
 
-        System.out.println("Welcome to the traffic management system!");
-        System.out.println("Menu");
-        System.out.println("1. Add");
-        System.out.println("2. Delete");
-        System.out.println("3. System");
-        System.out.println("0. Quit");
-        Scanner scanner = new Scanner(System.in);
-        try {
-            while (true) {
-                int choice;
-                if (scanner.hasNextInt()) {
-                    choice = scanner.nextInt();}
-                else{
-                    scanner.next();
-                    continue;
-                }
-                switch (choice) {
-                    case 1:
-                        System.out.println("1. Add");
-                        break;
-                    case 2:
-                        System.out.println("2. Delete");
-                        break;
-                    case 3:
-                        System.out.println("3. System");
-                        break;
-                    case 0:
-                        System.out.println("0. Quit");
-                        return; // You can use return to exit the loop and the method
-                    default:
-                        System.out.println("Wrong number");
-                }
-            }
+    System.out.println("Welcome to the traffic management system!");
+    InputValidator validator = new InputValidator();
+    validator.setErrorMessage("Error! Incorrect Input. Try again: ");
+    validator.setInputMessage("Input the number of roads: ");
+    validator.setMinValue(1);
+    validator.setMaxValue(10);
+    int numOfRoads = validator.getInput();
+    validator.setInputMessage("Input the interval: ");
+    validator.setMaxValue(1000);
+    int numOfInterval = validator.getInput();
+    validator.clearOutput();
+    validator.setErrorMessage("Incorrect option");
+    validator.setInputMessage("Menu:\n"+
+            "1. Add road\n" +
+            "2. Delete road\n" +
+            "3. Open system\n" +
+            "0. Quit");
+    validator.setMinValue(0);
+    validator.setMaxValue(4);
+    while (true){
+        int option = validator.getInput();
+        validator.clearOutput();
+        switch (option){
+            case 1:
+                System.out.println("Road added");
+                break;
+            case 2:
+                System.out.println("Road deleted");
+                break;
+            case 3:
+                System.out.println("System opened");
+                break;
+            case 0:
+                System.out.println("Bye");
+                return;
 
-        } catch (InputMismatchException e) {
-            scanner.next(); // Consuming invalid input
-            System.out.println("Error, wrong input");
         }
     }
-}
+
+}}

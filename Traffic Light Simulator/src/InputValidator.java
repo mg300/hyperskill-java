@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Scanner;
 
 public class InputValidator {
@@ -23,7 +24,15 @@ public class InputValidator {
     public void setMaxValue(int maxValue) {
         this.maxValue = maxValue;
     }
-
+    public void clearOutput(){
+        try {
+            var clearCommand = System.getProperty("os.name").contains("Windows")
+                    ? new ProcessBuilder("cmd", "/c", "cls")
+                    : new ProcessBuilder("clear");
+            clearCommand.inheritIO().start().waitFor();
+        }
+        catch (IOException | InterruptedException e) {}
+    }
     public int getInput(){
         int choice;
             while (true) {
