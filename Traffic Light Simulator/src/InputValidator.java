@@ -1,13 +1,19 @@
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.function.Consumer;
 
 public class InputValidator {
-    Scanner scanner = new Scanner(System.in);
+    Scanner scanner;
+    Consumer<String> output;
     String errorMessage;
     String inputMessage;
     int minValue;
     int maxValue;
 
+    public InputValidator(Scanner scanner, Consumer<String> output) {
+        this.scanner = scanner;
+        this.output = output;
+    }
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
