@@ -58,4 +58,15 @@ public class InputValidator {
                 }
             }
     }
+    public void subscribeEnterButton(Runnable function){
+        Thread thread = new Thread(() -> {
+            while(true){
+                if (scanner.nextLine().isEmpty()) {
+                    function.run();
+                    break;
+                }
+            }
+        });
+        thread.start();
+    }
 }
