@@ -1,8 +1,14 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Config {
     private int intervals;
-    private int roads;
+    private int roadsNum;
+    private Queue<String> roads;
     private static Config config;
-    private Config(){}
+    private Config(){
+        this.roads = new LinkedList<String>();
+    }
     public static Config getInstance(){
         if (config == null) {
             config = new Config();
@@ -14,15 +20,24 @@ public class Config {
         this.intervals = intervals;
     }
 
-    public void setRoads(int roads) {
-        this.roads = roads;
+    public void setRoadsNum(int roadsNum) {
+        this.roadsNum = roadsNum;
     }
 
     public int getIntervals() {
         return intervals;
     }
 
-    public int getRoads() {
-        return roads;
+    public int getRoadsNum() {
+        return roadsNum;
+    }
+    public void addRoad(String road){
+        this.roads.add(road);
+    }
+    public void deleteRoad(){
+        this.roads.remove();
+    }
+    public Queue<String> getRoads(){
+        return this.roads;
     }
 }

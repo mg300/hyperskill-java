@@ -58,6 +58,15 @@ public class InputValidator {
                 }
             }
     }
+    public String getString(){
+        String input;
+        while(true){
+            input = scanner.nextLine();
+            if(input!=""){
+                return input;
+            }
+        }
+    }
     public void subscribeEnterButton(Runnable function){
         Thread thread = new Thread(() -> {
             while(true){

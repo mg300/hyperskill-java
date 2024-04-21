@@ -1,3 +1,4 @@
+import java.util.Queue;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
@@ -8,9 +9,12 @@ public class InputManager implements  TimeObserver{
     final Consumer<String> output;
     final InputValidator validator;
 
-    public InputManager(Scanner scanner, Consumer<String> output) {
+    final Config config;
+
+    public InputManager(Scanner scanner, Consumer<String> output, Config config) {
         this.scanner = scanner;
         this.output = output;
+        this.config = config;
         validator = new InputValidator(scanner,output);
         time = new Stopwatch();
     }
@@ -45,6 +49,23 @@ public class InputManager implements  TimeObserver{
                 "! Number of roads: 1 !\n" +
                 "! Interval: 1 !\n" +
                 "! Press \"Enter\" to open menu !");
+        displayRoads(config.getRoads());
+
+
+    }
+    public void displayRoads(Queue<String> queue){
+        validator.clearOutput();
+        for (String str : queue) {
+            System.out.println(str);
+        }
+    }
+    public void addRoad(){
+        validator.clearOutput();
+        output.accept("Input road name: ");
+        String road = validator.getString();
+        config.addRoad(road);
+        output.accept("Road added");
+        validator.subscribeEnterButton(this::showMenuReadInput);
 
 
     }
@@ -53,8 +74,7 @@ public class InputManager implements  TimeObserver{
             int option = displayReadMenu();
             switch (option){
                 case 1:
-                    System.out.println("Road added");
-                    break;
+                    this.addRoad();
                 case 2:
                     System.out.println("Road deleted");
                     break;
