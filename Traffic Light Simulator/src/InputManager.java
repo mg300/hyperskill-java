@@ -63,11 +63,22 @@ public class InputManager implements  TimeObserver{
         validator.clearOutput();
         output.accept("Input road name: ");
         String road = validator.getString();
-        config.addRoad(road);
-        output.accept("Road added");
-        validator.subscribeEnterButton(this::showMenuReadInput);
+        boolean result=config.addRoad(road);
+        if (result){
+            output.accept("Road added");
+        }else{
+            output.accept("Queue is full");
+        }
 
-
+    }
+    public void deleteRoad(){
+        boolean result = config.deleteRoad();
+        if (result){
+            output.accept("Road deleted");
+        }else{
+            output.accept("Queue is empty");
+        }
+        scanner.nextLine();
     }
     public void showMenuReadInput(){
         while (true){
@@ -75,8 +86,9 @@ public class InputManager implements  TimeObserver{
             switch (option){
                 case 1:
                     this.addRoad();
+                    break;
                 case 2:
-                    System.out.println("Road deleted");
+                    this.deleteRoad();
                     break;
                 case 3:
                     time.start();
@@ -91,7 +103,6 @@ public class InputManager implements  TimeObserver{
 
             }
             output.accept("Click enter to continue...");
-            scanner.nextLine();
             scanner.nextLine();
             validator.clearOutput();
 

@@ -31,11 +31,22 @@ public class Config {
     public int getRoadsNum() {
         return roadsNum;
     }
-    public void addRoad(String road){
-        this.roads.add(road);
+    public boolean addRoad(String road){
+        if (roads.size()>=roadsNum) {
+            return false;
+        } else {
+            roads.add(road);
+            return true;
+        }
+
     }
-    public void deleteRoad(){
-        this.roads.remove();
+    public boolean deleteRoad(){
+        if (roads.isEmpty()) {
+            return false;
+        } else {
+            this.roads.remove();
+            return true;
+        }
     }
     public Queue<String> getRoads(){
         return this.roads;
