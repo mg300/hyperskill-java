@@ -1,4 +1,4 @@
-import java.util.Queue;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
@@ -49,15 +49,38 @@ public class InputManager implements  TimeObserver{
                 "! Number of roads: 1 !\n" +
                 "! Interval: 1 !\n" +
                 "! Press \"Enter\" to open menu !");
-        displayRoads(config.getRoads());
+        int[] times = updateRoadsTimers(elapsedTime);
+        Iterator<String> iterator = config.getRoads().iterator();
+        for(int i=0; i<times.length; i++){
+            if(i==config.openIndex){
+                output.accept(iterator.next() +" will be open for "+times[i]+".");
+            }else{
+                output.accept(iterator.next() +" will be close for "+times[i]+".");
 
-
-    }
-    public void displayRoads(Queue<String> queue){
-        validator.clearOutput();
-        for (String str : queue) {
-            System.out.println(str);
+            }
         }
+    }
+
+    public int[] updateRoadsTimers(long elapsedTime){
+        int interval = config.getIntervals();
+        int openIndex = config.openIndex;
+        for (int i=0; i<config.getRoads().size();i++){
+            config.times[i]-=1;
+            if(config.times[i]==0 && openIndex==i){
+                config.times[i]=interval*(config.times.length-1);
+
+            }
+            if(config.times[i]==0 && openIndex!=i){
+                config.times[i]=interval;
+                if(openIndex==config.times.length-1){
+                    config.openIndex=0;
+                }else{
+                config.openIndex++;
+                }
+            }
+        }
+
+        return config.times;
     }
     public void addRoad(){
         validator.clearOutput();

@@ -5,9 +5,15 @@ public class Config {
     private int intervals;
     private int roadsNum;
     private Queue<String> roads;
+
+    public int[] times;
+    public int openIndex;
+
     private static Config config;
     private Config(){
-        this.roads = new LinkedList<String>();
+        this.roads = new LinkedList<>();
+        this.openIndex=0;
+
     }
     public static Config getInstance(){
         if (config == null) {
@@ -36,6 +42,8 @@ public class Config {
             return false;
         } else {
             roads.add(road);
+            times = new int[roads.size()];
+            initTimes();
             return true;
         }
 
@@ -45,10 +53,21 @@ public class Config {
             return false;
         } else {
             this.roads.remove();
+            times = new int[roads.size()];
+            initTimes();
             return true;
         }
     }
     public Queue<String> getRoads(){
         return this.roads;
+    }
+    private void initTimes(){
+        for(int i=0; i<roads.size(); i++){
+            if(i==0) times[i] = intervals;
+            else{
+
+            times[i] = i*intervals;
+            }
+        }
     }
 }
