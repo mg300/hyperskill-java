@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -22,16 +23,22 @@ public class Main {
             System.err.println("Input / output error: " + e.getMessage());
         }
          String maxLength = lines.stream()
-                .max(java.util.Comparator.comparingInt(String::length))
+                .max(Comparator.comparing(String::length))
                 .orElse("");
 
         for(String line : lines){
-            while (line.length()<maxLength.length()){
-                line = line+" ";
+            StringBuilder lineBuilder = new StringBuilder(line);
+            while (lineBuilder.length()<maxLength.length()){
+                lineBuilder.append(" ");
             }
+            line = lineBuilder.toString();
             System.out.print(line);
             System.out.print(" | ");
-            System.out.print(line+"\n");
+            String mirrorLine = Mirror.mirrorLine(line);
+            System.out.print(mirrorLine+"\n");
         }
     }
+
 }
+
+///Users/mateuszg/Desktop/hyperskill-java/ASCII Mirror/ASCII_Animals/MooFolder/MooFile.txt
