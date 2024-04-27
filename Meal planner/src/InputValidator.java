@@ -1,8 +1,12 @@
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
-public class InputValidator {
+public class InputValidator implements Validator {
+
+    private ArrayList inputList;
     Scanner scanner;
     Consumer<String> output;
     String errorMessage;
@@ -14,7 +18,17 @@ public class InputValidator {
         this.scanner = scanner;
         this.output = output;
     }
-
+    private void reset() {
+        inputList.clear();
+        inputMessage = null;
+        errorMessage = null;
+        minValue = Integer.MIN_VALUE;
+        maxValue = Integer.MAX_VALUE;
+    }
+    public <T> void setPossibleInputs(T[] elements) {
+        this.inputList = new ArrayList<T>();
+        inputList.addAll(Arrays.asList(elements));
+    }
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
@@ -39,13 +53,15 @@ public class InputValidator {
         }
         catch (IOException | InterruptedException e) {}
     }
-    public int getInput(){
+    public int getInt(){
+        this.clearOutput();
         int choice;
         while (true) {
             output.accept(inputMessage);
             if (scanner.hasNextInt()) {
                 choice = scanner.nextInt();
                 if(choice>=minValue && choice<=maxValue){
+                    this.reset();
                     return choice;
                 }
                 else{
@@ -59,23 +75,49 @@ public class InputValidator {
         }
     }
     public String getString(){
+        this.clearOutput();
         String input;
         while(true){
             output.accept(inputMessage);
             input = scanner.nextLine();
-            if(input!=""){
+            if(!containsOnlyLetters(input)){
+                output.accept("Wrong format. Use letters only!");
+                continue;
+            }
+            if(inputList.isEmpty() || inputList.contains(input)){
+                this.reset();
                 return input;
             }
+            output.accept(errorMessage);
         }
     }
     public String[] getStrings(){
+        this.clearOutput();
         while(true){
             output.accept(inputMessage);
-            String inputString = scanner.nextLine();
-            if(inputString!=""){
-                return inputString.split(",");
+            String input = scanner.nextLine();
+            if(!containsOnlyLetters(input)){
+                output.accept("Wrong format. Use letters only!");
+                continue;
             }
+            if(inputList.isEmpty() || inputList.contains(input)){
+                this.reset();
+                return input.split(", ");
+            }
+            output.accept(errorMessage);
+
         }
+    }
+    public void displayMeal(Meal meal){
+        output.accept("Category: "+meal.getCategory());
+        output.accept("Name: "+meal.getName());
+        for(String ingredient : meal.getIngredients()){
+        output.accept(ingredient);
+        }
+        scanner.nextLine();
+    }
+    private boolean containsOnlyLetters(String str) {
+        return str.matches("[a-zA-Z,]+");
     }
 
 }
