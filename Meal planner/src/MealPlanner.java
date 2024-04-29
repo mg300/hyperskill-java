@@ -35,7 +35,8 @@ public class MealPlanner {
                 }
                 case "show":{
 //                    manager.showMeals(meals);
-                    output.accept(connection.getFormattedMeals());
+                    String category = manager.getMealType();
+                    output.accept(connection.getMealsByCategory(category));
                     break;
                 }
                 case "exit":{

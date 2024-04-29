@@ -69,43 +69,59 @@ public class DBconnection {
             e.printStackTrace();
         }
     }
-    public String getFormattedMeals() {
-        StringBuilder formattedMeals = new StringBuilder();
+    public String getMealsByCategory(String category) {
+        StringBuilder result = new StringBuilder();
 
         try {
-            String selectMealsSQL = "SELECT category, meal FROM meals";
+
+            String selectMealsSQL = "SELECT meal FROM meals WHERE category = ?";
             PreparedStatement statement = connection.prepareStatement(selectMealsSQL);
+            statement.setString(1, category);
             ResultSet resultSet = statement.executeQuery();
 
-            while (resultSet.next()) {
-                String category = resultSet.getString("category");
-                String meal = resultSet.getString("meal");
+            boolean foundMeals = false;
 
-                formattedMeals.append("Category: ").append(category).append("\n");
-                formattedMeals.append("Name: ").append(meal).append("\n");
+            while (resultSet.next()) {
+                String meal = resultSet.getString("meal");
 
                 String selectIngredientsSQL = "SELECT ingredient FROM ingredients WHERE meal_id IN (SELECT meal_id FROM meals WHERE meal = ?)";
                 PreparedStatement ingredientStatement = connection.prepareStatement(selectIngredientsSQL);
                 ingredientStatement.setString(1, meal);
                 ResultSet ingredientResultSet = ingredientStatement.executeQuery();
 
-                formattedMeals.append("Ingredients:\n");
+                result.append("Category: ").append(category).append("\n");
+                result.append("Name: ").append(meal).append("\n");
+
+                result.append("Ingredients:\n");
+                boolean foundIngredients = false;
                 while (ingredientResultSet.next()) {
                     String ingredient = ingredientResultSet.getString("ingredient");
-                    formattedMeals.append(ingredient).append("\n");
+                    result.append(ingredient).append("\n");
+                    foundIngredients = true;
                 }
-                formattedMeals.append("\n");
+                if (!foundIngredients) {
+                    result.append("No ingredients found.\n");
+                }
+
+                result.append("\n");
 
                 ingredientStatement.close();
+                foundMeals = true;
+            }
+
+            if (!foundMeals) {
+                return "No meals found in category: " + category;
             }
 
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
+            return "Error occurred while fetching meals by category.";
         }
 
-        return formattedMeals.toString();
+        return result.toString();
     }
+
     public void closeConnection() {
         try {
             if (connection != null) {
