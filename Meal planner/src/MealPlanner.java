@@ -9,10 +9,13 @@ public class MealPlanner {
     private InputOutputManager manager;
     private List<Meal> meals;
 
-    public MealPlanner(Scanner scanner, Consumer<String> output) {
+    private DBconnection connection;
+
+    public MealPlanner(Scanner scanner, Consumer<String> output,DBconnection connection) {
         this.scanner = scanner;
         this.output = output;
         meals = new ArrayList<>();
+        this.connection = connection;
         start();
     }
 
