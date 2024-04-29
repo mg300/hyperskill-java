@@ -11,7 +11,7 @@ public class DBconnection {
         try {
             connection = DriverManager.getConnection(DB_URL, USER, PASS);
             connection.setAutoCommit(true);
-            initializeDB();
+            this.initializeDB();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -23,12 +23,12 @@ public class DBconnection {
         return instance;
     }
     public void initializeDB() throws SQLException {
+        Statement statement = connection.createStatement();
         String createMealsTableSQL = "CREATE TABLE IF NOT EXISTS meals (" +
                 "category VARCHAR(255)," +
                 "meal VARCHAR(255)," +
                 "meal_id SERIAL PRIMARY KEY" +
                 ")";
-        Statement statement = connection.createStatement();
         statement.executeUpdate(createMealsTableSQL);
 
         // Tworzenie tabeli ingredients
@@ -40,6 +40,71 @@ public class DBconnection {
                 ")";
         statement.executeUpdate(createIngredientsTableSQL);
         statement.close();
+    }
+    public void saveMeal(Meal meal) {
+        try {
+            String insertMealSQL = "INSERT INTO meals (category, meal) VALUES (?, ?)";
+            PreparedStatement mealStatement = connection.prepareStatement(insertMealSQL, Statement.RETURN_GENERATED_KEYS);
+            mealStatement.setString(1, meal.getCategory());
+            mealStatement.setString(2, meal.getName());
+            mealStatement.executeUpdate();
+
+            ResultSet generatedKeys = mealStatement.getGeneratedKeys();
+            int mealId = -1;
+            if (generatedKeys.next()) {
+                mealId = generatedKeys.getInt(("meal_id"));
+            }
+
+            for (String ingredient : meal.getIngredients()) {
+                String insertIngredientSQL = "INSERT INTO ingredients (ingredient, meal_id) VALUES (?, ?)";
+                PreparedStatement ingredientStatement = connection.prepareStatement(insertIngredientSQL);
+                ingredientStatement.setString(1, ingredient);
+                ingredientStatement.setInt(2, mealId);
+                ingredientStatement.executeUpdate();
+                ingredientStatement.close();
+            }
+
+            mealStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public String getFormattedMeals() {
+        StringBuilder formattedMeals = new StringBuilder();
+
+        try {
+            String selectMealsSQL = "SELECT category, meal FROM meals";
+            PreparedStatement statement = connection.prepareStatement(selectMealsSQL);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String category = resultSet.getString("category");
+                String meal = resultSet.getString("meal");
+
+                formattedMeals.append("Category: ").append(category).append("\n");
+                formattedMeals.append("Name: ").append(meal).append("\n");
+
+                String selectIngredientsSQL = "SELECT ingredient FROM ingredients WHERE meal_id IN (SELECT meal_id FROM meals WHERE meal = ?)";
+                PreparedStatement ingredientStatement = connection.prepareStatement(selectIngredientsSQL);
+                ingredientStatement.setString(1, meal);
+                ResultSet ingredientResultSet = ingredientStatement.executeQuery();
+
+                formattedMeals.append("Ingredients:\n");
+                while (ingredientResultSet.next()) {
+                    String ingredient = ingredientResultSet.getString("ingredient");
+                    formattedMeals.append(ingredient).append("\n");
+                }
+                formattedMeals.append("\n");
+
+                ingredientStatement.close();
+            }
+
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return formattedMeals.toString();
     }
     public void closeConnection() {
         try {

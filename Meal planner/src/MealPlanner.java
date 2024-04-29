@@ -28,11 +28,14 @@ public class MealPlanner {
                     String category = manager.getMealType();
                     String name = manager.getMealName();
                     String[] ingredients = manager.getIngredients();
-                    meals.add(new Meal(name,category,ingredients));
+                    Meal meal = new Meal(name,category,ingredients);
+                    meals.add(meal);
+                    connection.saveMeal(meal);
                     break;
                 }
                 case "show":{
-                    manager.showMeals(meals);
+//                    manager.showMeals(meals);
+                    output.accept(connection.getFormattedMeals());
                     break;
                 }
                 case "exit":{
