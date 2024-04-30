@@ -1,4 +1,6 @@
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DBconnection {
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/postgres";
@@ -31,7 +33,6 @@ public class DBconnection {
                 ")";
         statement.executeUpdate(createMealsTableSQL);
 
-        // Tworzenie tabeli ingredients
         String createIngredientsTableSQL = "CREATE TABLE IF NOT EXISTS ingredients (" +
                 "ingredient VARCHAR(255)," +
                 "ingredient_id SERIAL PRIMARY KEY," +
@@ -39,6 +40,15 @@ public class DBconnection {
                 "FOREIGN KEY (meal_id) REFERENCES meals(meal_id)" +
                 ")";
         statement.executeUpdate(createIngredientsTableSQL);
+
+        String createPlanTableSQL = "CREATE TABLE IF NOT EXISTS plan (" +
+                "day VARCHAR(255)," +
+                "meal_id INT," +
+                "category VARCHAR(255)," +
+                "day_id SERIAL PRIMARY KEY," +
+                "FOREIGN KEY (meal_id) REFERENCES meals(meal_id)" +
+                ")";
+        statement.executeUpdate(createPlanTableSQL);
         statement.close();
     }
     public void saveMeal(Meal meal) {
@@ -120,6 +130,60 @@ public class DBconnection {
         }
 
         return result.toString();
+    }
+
+    public String[] getMealArrByCategory(String category) {
+        List<String> mealsList = new ArrayList<>();
+
+        try {
+            String selectMealsSQL = "SELECT meal FROM meals WHERE category = ?";
+            PreparedStatement statement = connection.prepareStatement(selectMealsSQL);
+            statement.setString(1, category);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String meal = resultSet.getString("meal");
+                mealsList.add(meal);
+            }
+
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new String[]{};
+        }
+
+        String[] result = new String[mealsList.size()];
+        return mealsList.toArray(result);
+    }
+
+    public void savePlanMeal(String day, String category, String meal){
+        try {
+
+            if(day=="Monday" && category=="breakfast"){
+                String deleteAllSQL = "DELETE FROM plan" ;
+                connection.prepareStatement(deleteAllSQL).executeUpdate();
+            }
+            int meal_id = -1;
+            String selectMealIdSQL = "SELECT meal_id FROM meals WHERE meal = ?";
+            PreparedStatement statement = connection.prepareStatement(selectMealIdSQL);
+            statement.setString(1, meal);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                meal_id = resultSet.getInt("meal_id");
+            }
+            statement.close();
+
+            String insertMealSQL = "INSERT INTO plan (day, category, meal_id) VALUES (?, ?,?)";
+            PreparedStatement planStatement = connection.prepareStatement(insertMealSQL, Statement.RETURN_GENERATED_KEYS);
+            planStatement.setString(1, day);
+            planStatement.setString(2, category);
+            planStatement.setInt(3, meal_id);
+            planStatement.executeUpdate();
+            planStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void closeConnection() {

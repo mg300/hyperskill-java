@@ -1,5 +1,3 @@
-import java.util.List;
-
 public class InputOutputManager {
     private final Validator validator;
 
@@ -7,8 +5,8 @@ public class InputOutputManager {
         this.validator=validator;
     }
     public String showMenuGetOption(){
-        validator.setPossibleInputs(new String[] {"add","show","exit"});
-        validator.setInputMessage("What would you like to do (add, show, exit)?");
+        validator.setPossibleInputs(new String[] {"add","show","exit","plan"});
+        validator.setInputMessage("What would you like to do (add, show, plan, exit)?");
         validator.setErrorMessage("Choose between \"add\", \"show\" and \"exit\"");
         return validator.getString();
     }
@@ -26,9 +24,12 @@ public class InputOutputManager {
         validator.setInputMessage("Input the ingredients:");
         return validator.getStrings();
     }
-    public void showMeals(List<Meal> meals){
-        for (Meal meal : meals){
-            validator.displayMeal(meal);
-        }
+    public String getMealForCategory(String day,String category, String[] meals){
+        validator.setPossibleInputs(meals);
+        validator.displayMealOptions(day,meals);
+        validator.setInputMessage("Choose the "+category+" for "+day+" from the list above:");
+        validator.setErrorMessage("This meal doesn’t exist. Choose a meal from the list above.");
+        return validator.getString();
     }
+
 }

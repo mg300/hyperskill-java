@@ -9,4 +9,5 @@ public interface Validator {
     String[] getStrings();
     void clearOutput();
     void displayMeal(Meal meal);
+    void displayMealOptions(String day, String[] meals);
 }

@@ -120,4 +120,11 @@ public class InputValidator implements Validator {
         return str.matches("[a-zA-Z,]+");
     }
 
+    public void displayMealOptions (String day, String[] meals){
+        output.accept(day);
+        for (String meal : meals){
+            output.accept(meal);
+        }
+    }
+
 }
