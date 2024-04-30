@@ -5,9 +5,9 @@ public class InputOutputManager {
         this.validator=validator;
     }
     public String showMenuGetOption(){
-        validator.setPossibleInputs(new String[] {"add","show","exit","plan"});
-        validator.setInputMessage("What would you like to do (add, show, plan, exit)?");
-        validator.setErrorMessage("Choose between \"add\", \"show\" and \"exit\"");
+        validator.setPossibleInputs(new String[] {"add","show","exit","plan","save"});
+        validator.setInputMessage("What would you like to do (add, show, plan, save, exit)?");
+        validator.setErrorMessage("Choose between \"add\", \"show\", \"plan\", \"save\" and \"exit\"");
         return validator.getString();
     }
     public String getMealType(){

@@ -1,3 +1,9 @@
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
@@ -12,10 +18,10 @@ public class MealPlanner {
         this.scanner = scanner;
         this.output = output;
         this.connection = connection;
-        start();
+        this.start();
     }
 
-    private void start(){
+    private void start() {
         manager = new InputOutputManager(new InputValidator(scanner,output));
         while(true){
             String option = manager.showMenuGetOption();
@@ -44,6 +50,36 @@ public class MealPlanner {
                 case "show":{
                     String category = manager.getMealType();
                     output.accept(connection.getMealsByCategory(category));
+                    break;
+                }
+                case "save":{
+                    String[] ingredients = connection.getPlanIngredients();
+                    Map<String,Integer> shoppingList = new LinkedHashMap<>();
+                    for (String ing : ingredients){
+                        String[] ingredientArr = ing.split(",");
+                        for (String ingr : ingredientArr){
+                            if(shoppingList.containsKey(ingr)){
+                                shoppingList.put(ingr,shoppingList.get(ingr)+1);
+                            }else{
+                                shoppingList.put(ingr,1);
+                            }
+                        }
+                    }
+                    try {
+                        File file = new File("./shoppingList.txt");
+                        FileWriter writer = new FileWriter(file);
+                        BufferedWriter bufferedWriter = new BufferedWriter(writer);
+                        for (Map.Entry<String, Integer> entry : shoppingList.entrySet()) {
+                            bufferedWriter.write(entry.getKey() + " x" + entry.getValue());
+                            bufferedWriter.newLine();
+                        }
+                        bufferedWriter.close();
+                        output.accept("Shopping list created!");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
                     break;
                 }
 

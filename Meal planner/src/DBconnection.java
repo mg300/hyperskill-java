@@ -185,6 +185,39 @@ public class DBconnection {
             e.printStackTrace();
         }
     }
+    public String[] getPlanIngredients() {
+        try {
+            String countRecordsSQL = "SELECT COUNT(*) AS count FROM plan";
+            PreparedStatement countStatement = connection.prepareStatement(countRecordsSQL);
+            ResultSet countResultSet = countStatement.executeQuery();
+            if (countResultSet.next()) {
+                int count = countResultSet.getInt("count");
+                if (count < 21) {
+                    return new String[]{"Plan your week first!"};
+                }
+            }
+
+            List<String> ingredientsList = new ArrayList<>();
+
+                String selectIngredientsSQL = "SELECT ingredient FROM ingredients INNER JOIN plan ON ingredients.meal_id = plan.meal_id";
+                PreparedStatement statement = connection.prepareStatement(selectIngredientsSQL);
+                ResultSet resultSet = statement.executeQuery();
+
+                while (resultSet.next()) {
+                    String ingredient = resultSet.getString("ingredient");
+                    ingredientsList.add(ingredient);
+                }
+
+                statement.close();
+
+            String[] ingredientsArray = new String[ingredientsList.size()];
+            return ingredientsList.toArray(ingredientsArray);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public void closeConnection() {
         try {
