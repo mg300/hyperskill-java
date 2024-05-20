@@ -1,7 +1,11 @@
 package org.example;
 
+
+import java.sql.*;
+
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello world!");
+    public static void main(String[] args) throws SQLException {
+        H2DAO DB = new H2DAO();
+
     }
 }
