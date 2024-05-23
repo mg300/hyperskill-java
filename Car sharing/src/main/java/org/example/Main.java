@@ -9,6 +9,6 @@ public class Main {
         H2DAO DB = new H2DAO();
         Consumer<String> output = System.out::println;
         Scanner scanner = new Scanner(System.in);
-        new Menu(scanner, output, DB);
+        new MenuFactory(scanner, output, DB);
     }
 }
